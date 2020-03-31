@@ -9,8 +9,8 @@ router.route('/').get(async (req, res) => {
 });
 
 router.route('/:userID').get(async (req, res) => {
-  const users = await usersService.getAll();
-  res.json(users.find(user => user.id === req.params.userID));
+  const user = await usersService.getByID(req.params.userID);
+  res.json(user);
 });
 
 module.exports = router;
