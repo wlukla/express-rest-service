@@ -1,6 +1,7 @@
+const users = require('./users.dummy');
+
 const getAll = async () => {
-  // TODO: mock implementation. should be replaced during task development
-  return [];
+  return users;
 };
 
 module.exports = { getAll };
