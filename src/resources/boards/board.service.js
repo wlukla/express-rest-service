@@ -1,8 +1,8 @@
-const tasksRepo = require('./board.memory.repository');
+const boardRepo = require('./board.memory.repository');
 
-const getAll = () => tasksRepo.getAll();
+const getAll = () => boardRepo.getAll();
 const getByID = async id => {
-  const tasks = await tasksRepo.getAll();
+  const tasks = await boardRepo.getAll();
   const res = await tasks.find(user => user.id === id);
   return res;
 };
