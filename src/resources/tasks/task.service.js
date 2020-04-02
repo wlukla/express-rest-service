@@ -1,9 +1,11 @@
 const tasksRepo = require('./task.memory.repository');
 
-const getAll = () => tasksRepo.getAll();
-const getByID = async id => {
-  const tasks = await tasksRepo.getAll();
-  const res = await tasks.find(user => user.id === id);
+const tasks = tasksRepo.getAll();
+console.log(tasks);
+
+const getAll = () => tasks;
+const getByID = id => {
+  const res = tasks.find(task => task.id === id);
   return res;
 };
 

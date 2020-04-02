@@ -7,8 +7,8 @@ router.route('/').get(async (req, res) => {
   res.json(users);
 });
 
-router.route('/:taskID').get(async (req, res) => {
-  const user = await taskService.getByID(req.params.taskID);
+router.route('/:taskID').get((req, res) => {
+  const user = taskService.getByID(req.params.taskID);
   res.json(user);
 });
 
