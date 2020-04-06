@@ -22,7 +22,8 @@ router
     if (task) {
       res.json(task);
     } else {
-      res.send({ code: 404, message: 'Task not found.' });
+      res.status(404);
+      res.send({ message: 'Task not found.' });
     }
   })
   .put((req, res) => {

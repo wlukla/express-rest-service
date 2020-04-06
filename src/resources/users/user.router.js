@@ -29,6 +29,7 @@ router
       res.status(404);
       res.send({ message: 'User not found' });
     } else {
+      res.status(200);
       res.json(user);
     }
   })
@@ -44,14 +45,9 @@ router
     }
   })
   .delete((req, res) => {
-    const user = usersService.getByID(req.params.userID);
-    if (!user) {
-      res.status(404);
-      res.send({ message: 'User not found' });
-    } else {
-      usersService.deleteUser(req.params.userID);
-      res.send({ message: 'The user has been deleted' });
-    }
+    usersService.deleteUser(req.params.userID);
+    res.status(204);
+    res.send({ message: 'The user has been deleted' });
   });
 
 module.exports = router;

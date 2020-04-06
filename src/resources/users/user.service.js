@@ -20,17 +20,11 @@ const updateUser = (id, data) => {
 
 const deleteUser = id => {
   usersRepo.deleteUser(id);
-  const tasks = taskRepo
-    .getAll()
-    .filter(task => task.userId === id)
-    .map(task => {
-      task.userId = null;
-      return task;
-    });
-  if (tasks.length > 0) {
-    for (let i = 0; i < tasks.length; i += 1) {
-      taskService.updateTask(tasks[i].id, tasks[i]);
-    }
+  const tasks = taskRepo.getAll().filter(task => task.userId === id);
+
+  for (let i = 0; i < tasks.length; i += 1) {
+    const { id: taskId, boardId } = tasks[i];
+    taskService.updateTask(taskId, boardId, { ...tasks[i], userId: null });
   }
 };
 

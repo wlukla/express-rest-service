@@ -26,19 +26,25 @@ router
   .route('/:boardID')
   .get((req, res) => {
     const board = boardService.getByID(req.params.boardID);
-    res.json(board);
+    if (board) {
+      res.json(board);
+    } else {
+      res.status(404);
+      res.send({ message: 'Board not found' });
+    }
   })
   .put((req, res) => {
     boardService.updateBoard(req.params.boardID, req.body);
     res.send({ message: 'The board has been updated.' });
   })
   .delete((req, res) => {
-    const board = boardService.getByID(req.params.userID);
-    if (!board) {
-      res.send({ code: 404, message: 'Board not found' });
+    const task = boardService.getByID(req.params.boardID);
+    if (!task) {
+      res.status(404);
+      res.send({ message: 'Task not found' });
     } else {
-      boardService.deleteBoard(req.params.userID);
-      res.send({ code: 204, message: 'The board has been deleted' });
+      boardService.deleteBoard(req.params.boardID);
+      res.send({ message: 'The Task has been deleted' });
     }
   });
 

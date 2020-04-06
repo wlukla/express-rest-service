@@ -1,6 +1,5 @@
 const boardRepo = require('./board.memory.repository');
 const taskRepo = require('../tasks/task.memory.repository');
-const taskService = require('../tasks/task.service');
 
 const getAll = () => boardRepo.getAll();
 
@@ -20,12 +19,11 @@ const updateBoard = (id, data) => {
 
 const deleteBoard = id => {
   boardRepo.deleteBoard(id);
-  const tasks = taskRepo
-    .getAll()
-    .filter(task => task.boardId === id)
-    .map(task => task.id);
-  if (tasks.length > 0) {
-    taskService.forEach(task => taskService.deleteTask(task.id));
+  const tasks = taskRepo.getAll().filter(task => task.boardId === id);
+
+  for (let i = 0; i < tasks.length; i++) {
+    const { id: taskId, boardId } = tasks[i];
+    taskRepo.deleteTask(taskId, boardId);
   }
 };
 
