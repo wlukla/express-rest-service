@@ -1,28 +1,23 @@
 const usersRepo = require('./user.memory.repository');
 
-const users = usersRepo.getAll();
-
-const getAll = () => users;
+const getAll = () => usersRepo.getAll();
 
 const getByID = id => {
+  const users = usersRepo.getAll();
   const res = users.find(user => user.id === id);
   return res;
 };
 
 const add = user => {
-  users.push(user);
+  usersRepo.addUser(user);
 };
 
 const update = (id, data) => {
-  const userIdx = users.map(user => user.id).indexOf(id);
-  users[userIdx] = { ...users[userIdx], ...data };
+  usersRepo.updateUser(id, data);
 };
 
 const deleteUser = id => {
-  const userIdx = users.map(user => user.id).indexOf(id);
-  if (userIdx > -1) {
-    users.splice(userIdx, 1);
-  }
+  usersRepo.deleteUser(id);
 };
 
 module.exports = {

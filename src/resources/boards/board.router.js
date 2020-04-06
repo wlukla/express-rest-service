@@ -12,7 +12,7 @@ router
     const newBoard = { ...new Board(), ...req.body };
     boardService.add(newBoard);
 
-    res.send('The board has been created.');
+    res.send({ message: 'The board has been created.' });
   });
 
 router
@@ -23,11 +23,11 @@ router
   })
   .put((req, res) => {
     boardService.update(req.params.boardID, req.body);
-    res.send('The board has been updated.');
+    res.send({ message: 'The board has been updated.' });
   })
   .delete((req, res) => {
     boardService.deleteBoard(req.params.boardID);
-    res.send('The board has been deleted.');
+    res.send({ message: 'The board has been deleted.' });
   });
 
 module.exports = router;

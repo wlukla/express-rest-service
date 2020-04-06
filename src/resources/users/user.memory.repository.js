@@ -1,14 +1,24 @@
-const uuid = require('uuid').v4;
-const User = require('./user.model');
+const users = [];
 
 const getAll = () => {
-  return [
-    new User(uuid(), 'Andrew', 'andy', 'PSSWRD'),
-    new User(uuid(), 'Alex', 'AleXXX333', 'PSSWRD'),
-    new User(uuid(), 'Gordon', 'GrDn', 'PSSWRD'),
-    new User(uuid(), 'Sofia', 'sonyPS', 'PSSWRD'),
-    new User(uuid(), 'Brenda', 'HI_THERE', 'PSSWRD')
-  ];
+  return users;
 };
 
-module.exports = { getAll };
+const addUser = user => {
+  users.push(user);
+};
+
+const updateUser = (id, newUser) => {
+  const userIdx = users.map(user => user.id).indexOf(id);
+  if (userIdx > -1) {
+    users[userIdx] = { ...users[userIdx], ...newUser };
+  }
+};
+
+const deleteUser = id => {
+  const userIdx = users.map(user => user.id).indexOf(id);
+  if (userIdx > -1) {
+    users.splice(userIdx, 1);
+  }
+};
+module.exports = { getAll, addUser, updateUser, deleteUser };

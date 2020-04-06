@@ -12,13 +12,12 @@ router
     const { name, login, password } = req.body;
     if (!name || !login || !password) {
       res.status(400);
-      res.send('Bad request');
+      res.end({ message: 'Bad request' });
     } else {
-      const user = new User();
-      const newUser = { ...user, ...req.body };
-      usersService.add(newUser);
+      const user = new User({ name, login, password });
+      usersService.add(user);
 
-      res.send('The user has been created.');
+      res.json(User.toResponse(user));
     }
   });
 
@@ -28,7 +27,7 @@ router
     const user = usersService.getByID(req.params.userID);
     if (!user) {
       res.status(404);
-      res.send('User not found');
+      res.send({ message: 'User not found' });
     } else {
       res.json(user);
     }
@@ -37,20 +36,21 @@ router
     const user = usersService.getByID(req.params.userID);
     if (!user) {
       res.status(404);
-      res.send('User not found');
+      res.send({ message: 'User not found' });
     } else {
       usersService.update(req.params.userID, req.body);
-      res.send('The user has been updated.');
+      res.status(200);
+      res.send({ message: 'The user has been updated.' });
     }
   })
   .delete((req, res) => {
     const user = usersService.getByID(req.params.userID);
     if (!user) {
       res.status(404);
-      res.send('User not found');
+      res.send({ message: 'User not found' });
     } else {
       usersService.deleteUser(req.params.userID);
-      res.send('The user has been deleted');
+      res.send({ message: 'The user has been deleted' });
     }
   });
 
