@@ -1,29 +1,29 @@
-const uuidv4 = require('uuid').v4;
+const tasks = [];
 
 const getAll = () => {
-  return [
-    {
-      id: uuidv4(),
-      title: 'TASK1',
-      order: 11,
-      description: 'TASK_DESCRIPTION',
-      userId: 'SOME_ID'
-    },
-    {
-      id: uuidv4(),
-      title: 'TASK2',
-      order: 12,
-      description: 'TASK_DESCRIPTION',
-      userId: 'SOME_ID'
-    },
-    {
-      id: uuidv4(),
-      title: 'TASK3',
-      order: 13,
-      description: 'TASK_DESCRIPTION',
-      userId: 'SOME_ID'
-    }
-  ];
+  return tasks;
 };
 
-module.exports = { getAll };
+const addTask = task => {
+  tasks.push(task);
+};
+
+const updateTask = (taskId, boardId, data) => {
+  const taskIdx = tasks.findIndex(
+    task => task.id === taskId && task.boardId === boardId
+  );
+  if (taskIdx > -1) {
+    tasks[taskIdx] = { ...tasks[taskIdx], ...data };
+  }
+};
+
+const deleteTask = (taskId, boardId) => {
+  const taskIdx = tasks.findIndex(
+    task => task.id === taskId && task.boardId === boardId
+  );
+  if (taskIdx > -1) {
+    tasks.splice(taskIdx, 1);
+  }
+};
+
+module.exports = { getAll, addTask, updateTask, deleteTask };

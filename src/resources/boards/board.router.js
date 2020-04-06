@@ -9,10 +9,17 @@ router
     res.json(tasks);
   })
   .post((req, res) => {
-    const newBoard = { ...new Board(), ...req.body };
-    boardService.add(newBoard);
+    const { title, columns } = req.body;
 
-    res.send({ message: 'The board has been created.' });
+    if (!title || !columns) {
+      res.status(400);
+      res.end({ message: 'Bad request' });
+    } else {
+      const newBoard = new Board({ title, columns });
+      boardService.addBoard(newBoard);
+
+      res.json(newBoard);
+    }
   });
 
 router
@@ -22,12 +29,17 @@ router
     res.json(board);
   })
   .put((req, res) => {
-    boardService.update(req.params.boardID, req.body);
+    boardService.updateBoard(req.params.boardID, req.body);
     res.send({ message: 'The board has been updated.' });
   })
   .delete((req, res) => {
-    boardService.deleteBoard(req.params.boardID);
-    res.send({ message: 'The board has been deleted.' });
+    const board = boardService.getByID(req.params.userID);
+    if (!board) {
+      res.send({ code: 404, message: 'Board not found' });
+    } else {
+      boardService.deleteBoard(req.params.userID);
+      res.send({ code: 204, message: 'The board has been deleted' });
+    }
   });
 
 module.exports = router;

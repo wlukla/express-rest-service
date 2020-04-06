@@ -15,7 +15,7 @@ router
       res.end({ message: 'Bad request' });
     } else {
       const user = new User({ name, login, password });
-      usersService.add(user);
+      usersService.addUser(user);
 
       res.json(User.toResponse(user));
     }
@@ -38,7 +38,7 @@ router
       res.status(404);
       res.send({ message: 'User not found' });
     } else {
-      usersService.update(req.params.userID, req.body);
+      usersService.updateUser(req.params.userID, req.body);
       res.status(200);
       res.send({ message: 'The user has been updated.' });
     }
