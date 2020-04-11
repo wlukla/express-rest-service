@@ -3,7 +3,7 @@ const express = require('express');
 const swaggerUI = require('swagger-ui-express');
 const path = require('path');
 const YAML = require('yamljs');
-const winston = require('winston');
+const { createLogger, format, transports } = require('winston');
 const expressWinston = require('express-winston');
 const userRouter = require('./resources/users/user.router');
 const taskRouter = require('./resources/tasks/task.router');
@@ -26,22 +26,15 @@ app.use('/', (req, res, next) => {
 
 app.use(
   expressWinston.logger({
-    transports: [new winston.transports.Console({ json: true })],
-    format: winston.format.combine(
-      winston.format.colorize(),
-      winston.format.json()
-    ),
-    // meta: false,
-    msg: 'HTTP {{req.url}} {{req.body}} {{req.params}}'
-    // expressFormat: true,
-    // colorize: true,
-    // ignoreRoute(req, res) {
-    //   return false;
-    // }
+    transports: [new transports.Console()],
+    meta: false,
+    msg:
+      'URL: {{req.url}}, queryParams: {{JSON.stringify(req.query)}}, body: {{JSON.stringify(req.body)}}',
+    colorize: true
   })
 );
+
 app.use('/users', userRouter);
 app.use('/boards', boardRouter);
 app.use('/', taskRouter);
-
 module.exports = app;
