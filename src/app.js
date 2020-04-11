@@ -1,7 +1,10 @@
+/* eslint-disable no-unused-vars */
 const express = require('express');
 const swaggerUI = require('swagger-ui-express');
 const path = require('path');
 const YAML = require('yamljs');
+const winston = require('winston');
+const expressWinston = require('express-winston');
 const userRouter = require('./resources/users/user.router');
 const taskRouter = require('./resources/tasks/task.router');
 const boardRouter = require('./resources/boards/board.router');
@@ -21,6 +24,22 @@ app.use('/', (req, res, next) => {
   next();
 });
 
+app.use(
+  expressWinston.logger({
+    transports: [new winston.transports.Console({ json: true })],
+    format: winston.format.combine(
+      winston.format.colorize(),
+      winston.format.json()
+    ),
+    // meta: false,
+    msg: 'HTTP {{req.url}} {{req.body}} {{req.params}}'
+    // expressFormat: true,
+    // colorize: true,
+    // ignoreRoute(req, res) {
+    //   return false;
+    // }
+  })
+);
 app.use('/users', userRouter);
 app.use('/boards', boardRouter);
 app.use('/', taskRouter);
