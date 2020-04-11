@@ -3,8 +3,9 @@ const express = require('express');
 const swaggerUI = require('swagger-ui-express');
 const path = require('path');
 const YAML = require('yamljs');
-const { createLogger, format, transports } = require('winston');
-const expressWinston = require('express-winston');
+
+const logger = require('./logger');
+
 const userRouter = require('./resources/users/user.router');
 const taskRouter = require('./resources/tasks/task.router');
 const boardRouter = require('./resources/boards/board.router');
@@ -24,17 +25,10 @@ app.use('/', (req, res, next) => {
   next();
 });
 
-app.use(
-  expressWinston.logger({
-    transports: [new transports.Console()],
-    meta: false,
-    msg:
-      'URL: {{req.url}}, queryParams: {{JSON.stringify(req.query)}}, body: {{JSON.stringify(req.body)}}',
-    colorize: true
-  })
-);
+app.use(logger);
 
 app.use('/users', userRouter);
 app.use('/boards', boardRouter);
 app.use('/', taskRouter);
+
 module.exports = app;
