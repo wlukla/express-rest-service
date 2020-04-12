@@ -7,6 +7,7 @@ router
   .get((req, res, next) => {
     try {
       const boards = boardService.getAll();
+      res.status(200);
       res.json(boards);
     } catch (err) {
       return next(err);
@@ -15,14 +16,13 @@ router
   .post((req, res, next) => {
     try {
       const { title, columns } = req.body;
-
       if (!title || !columns) {
         res.status(400);
         res.end({ message: 'Bad request' });
       } else {
         const newBoard = new Board({ title, columns });
         boardService.addBoard(newBoard);
-
+        res.status(200);
         res.json(newBoard);
       }
     } catch (err) {
@@ -36,6 +36,7 @@ router
     try {
       const board = boardService.getByID(req.params.boardID);
       if (board) {
+        res.status(200);
         res.json(board);
       } else {
         res.status(404);
@@ -48,6 +49,7 @@ router
   .put((req, res, next) => {
     try {
       boardService.updateBoard(req.params.boardID, req.body);
+      res.status(200);
       res.send({ message: 'The board has been updated.' });
     } catch (err) {
       return next(err);
@@ -61,6 +63,7 @@ router
         res.send({ message: 'Board not found' });
       } else {
         boardService.deleteBoard(req.params.boardID);
+        res.status(200);
         res.send({ message: 'The board has been deleted' });
       }
     } catch (err) {

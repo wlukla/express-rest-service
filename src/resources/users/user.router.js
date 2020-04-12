@@ -7,7 +7,8 @@ router
   .get((req, res, next) => {
     try {
       const users = usersService.getAll();
-      res.status(200).json(users.map(User.toResponse));
+      res.status(200);
+      res.json(users.map(User.toResponse));
     } catch (err) {
       return next(err);
     }
@@ -21,7 +22,7 @@ router
       } else {
         const user = new User({ name, login, password });
         usersService.addUser(user);
-
+        res.status(200);
         res.json(User.toResponse(user));
       }
     } catch (err) {
