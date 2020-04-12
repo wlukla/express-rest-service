@@ -6,8 +6,8 @@ router
   .route('/')
   .get((req, res, next) => {
     try {
-      const tasks = boardService.getAll();
-      res.json(tasks);
+      const boards = boardService.getAll();
+      res.json(boards);
     } catch (err) {
       return next(err);
     }
@@ -55,13 +55,13 @@ router
   })
   .delete((req, res, next) => {
     try {
-      const task = boardService.getByID(req.params.boardID);
-      if (!task) {
+      const board = boardService.getByID(req.params.boardID);
+      if (!board) {
         res.status(404);
-        res.send({ message: 'Task not found' });
+        res.send({ message: 'Board not found' });
       } else {
         boardService.deleteBoard(req.params.boardID);
-        res.send({ message: 'The Task has been deleted' });
+        res.send({ message: 'The board has been deleted' });
       }
     } catch (err) {
       return next(err);
