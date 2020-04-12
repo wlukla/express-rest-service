@@ -4,9 +4,7 @@ const taskRepo = require('../tasks/task.memory.repository');
 const getAll = () => boardRepo.getAll();
 
 const getByID = id => {
-  const boards = getAll();
-  const res = boards.find(board => board.id === id);
-  return res;
+  return boardRepo.getByID(id);
 };
 
 const addBoard = board => {
@@ -21,10 +19,10 @@ const deleteBoard = id => {
   boardRepo.deleteBoard(id);
   const tasks = taskRepo.getAll().filter(task => task.boardId === id);
 
-  for (let i = 0; i < tasks.length; i++) {
-    const { id: taskId, boardId } = tasks[i];
+  tasks.forEach(task => {
+    const { id: taskId, boardId } = task;
     taskRepo.deleteTask(taskId, boardId);
-  }
+  });
 };
 
 module.exports = {

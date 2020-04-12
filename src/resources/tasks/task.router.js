@@ -7,6 +7,7 @@ router
   .get(async (req, res, next) => {
     try {
       const tasks = taskService.getAll(req.params.boardID);
+
       res.status(200);
       res.json(tasks.map(Task.toResponse));
     } catch (err) {
@@ -15,9 +16,8 @@ router
   })
   .post((req, res, next) => {
     try {
-      const boardID = req.params.boardID;
-      const data = req.body;
-      const task = taskService.addTask(boardID, data);
+      const task = taskService.addTask(req.params.boardID, req.body);
+
       res.status(200);
       res.json(Task.toResponse(task));
     } catch (err) {
@@ -44,13 +44,14 @@ router
   .put((req, res, next) => {
     try {
       const task = taskService.getByID(req.params.boardID, req.params.taskID);
-      if (!task) {
-        res.status(404);
-        res.send({ message: 'Task not found' });
-      } else {
+      if (task) {
         taskService.updateTask(req.params.taskID, req.params.boardID, req.body);
+
         res.status(200);
         res.send({ message: 'The task has been updated.' });
+      } else {
+        res.status(404);
+        res.send({ message: 'Task not found' });
       }
     } catch (err) {
       return next(err);
@@ -59,13 +60,14 @@ router
   .delete((req, res, next) => {
     try {
       const task = taskService.getByID(req.params.boardID, req.params.taskID);
-      if (!task) {
-        res.status(404);
-        res.send({ message: 'Task not found' });
-      } else {
+      if (task) {
         taskService.deleteTask(req.params.taskID, req.params.boardID);
+
         res.status(200);
         res.send({ message: 'The Task has been deleted' });
+      } else {
+        res.status(404);
+        res.send({ message: 'Task not found' });
       }
     } catch (err) {
       return next(err);

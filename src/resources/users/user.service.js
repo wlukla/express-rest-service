@@ -22,10 +22,10 @@ const deleteUser = id => {
   usersRepo.deleteUser(id);
   const tasks = taskRepo.getAll().filter(task => task.userId === id);
 
-  for (let i = 0; i < tasks.length; i += 1) {
-    const { id: taskId, boardId } = tasks[i];
-    taskService.updateTask(taskId, boardId, { ...tasks[i], userId: null });
-  }
+  tasks.forEach(task => {
+    const { id: taskId, boardId } = task;
+    taskService.updateTask(taskId, boardId, { ...tasks, userId: null });
+  });
 };
 
 module.exports = {
