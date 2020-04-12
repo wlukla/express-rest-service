@@ -1,10 +1,13 @@
 /* eslint-disable no-unused-vars */
 const winston = require('winston');
+const path = require('path');
+
+const logFilePath = path.resolve(__dirname, '../combined.log');
 
 const logger = winston.createLogger({
   transports: [
     new winston.transports.Console(),
-    new winston.transports.File({ filename: 'combined.log', flags: 'a' })
+    new winston.transports.File({ filename: logFilePath, flags: 'a' })
   ],
   format: winston.format.cli()
 });
