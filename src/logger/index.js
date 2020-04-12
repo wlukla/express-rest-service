@@ -25,8 +25,8 @@ const requestLogger = (req, res, next) => {
 
 const errorLogger = (err, req, res, next) => {
   const { statusCode, message } = err;
-  res.status(500).send(message);
-  logger.log('error', `CODE 500: ${message}`);
+  res.status(statusCode).send(message);
+  logger.log('error', `${statusCode}: ${message}`);
 };
 
 const processLogger = (err, message) => {

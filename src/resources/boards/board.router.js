@@ -1,6 +1,7 @@
 const router = require('express').Router();
 const Board = require('./board.model');
 const boardService = require('./board.service');
+const ErrorHandler = require('../../common/ErrorHandler');
 
 router
   .route('/')
@@ -24,8 +25,7 @@ router
         res.status(200);
         res.json(newBoard);
       } else {
-        res.status(400);
-        res.end({ message: 'Bad request' });
+        throw new ErrorHandler(400, 'Bad request');
       }
     } catch (err) {
       return next(err);
@@ -41,8 +41,7 @@ router
         res.status(200);
         res.json(board);
       } else {
-        res.status(404);
-        res.send({ message: 'Board not found' });
+        throw new ErrorHandler(404, 'Board not found');
       }
     } catch (err) {
       return next(err);
@@ -67,8 +66,7 @@ router
         res.status(200);
         res.send({ message: 'The board has been deleted' });
       } else {
-        res.status(404);
-        res.send({ message: 'Board not found' });
+        throw new ErrorHandler(404, 'Board not found');
       }
     } catch (err) {
       return next(err);

@@ -1,6 +1,7 @@
 const router = require('express').Router();
 const Task = require('./task.model');
 const taskService = require('./task.service');
+const ErrorHandler = require('../../common/ErrorHandler');
 
 router
   .route('/boards/:boardID/tasks')
@@ -34,8 +35,7 @@ router
         res.status(200);
         res.json(task);
       } else {
-        res.status(404);
-        res.send({ message: 'Task not found.' });
+        throw new ErrorHandler(404, 'Task not found');
       }
     } catch (err) {
       return next(err);
@@ -50,8 +50,7 @@ router
         res.status(200);
         res.send({ message: 'The task has been updated.' });
       } else {
-        res.status(404);
-        res.send({ message: 'Task not found' });
+        throw new ErrorHandler(404, 'Task not found');
       }
     } catch (err) {
       return next(err);
@@ -66,8 +65,7 @@ router
         res.status(200);
         res.send({ message: 'The Task has been deleted' });
       } else {
-        res.status(404);
-        res.send({ message: 'Task not found' });
+        throw new ErrorHandler(404, 'Task not found');
       }
     } catch (err) {
       return next(err);

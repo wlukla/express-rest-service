@@ -1,6 +1,7 @@
 const router = require('express').Router();
 const User = require('./user.model');
 const usersService = require('./user.service');
+const ErrorHandler = require('../../common/ErrorHandler');
 
 router
   .route('/')
@@ -24,8 +25,7 @@ router
         res.status(200);
         res.json(User.toResponse(user));
       } else {
-        res.status(400);
-        res.end({ message: 'Bad request' });
+        throw new ErrorHandler(400, 'Bad request');
       }
     } catch (err) {
       return next(err);
@@ -41,8 +41,7 @@ router
         res.status(200);
         res.json(user);
       } else {
-        res.status(404);
-        res.send({ message: 'User not found' });
+        throw new ErrorHandler(404, 'User not found');
       }
     } catch (err) {
       return next(err);
@@ -57,8 +56,7 @@ router
         res.status(200);
         res.send({ message: 'The user has been updated.' });
       } else {
-        res.status(404);
-        res.send({ message: 'User not found' });
+        throw new ErrorHandler(404, 'User not found');
       }
     } catch (err) {
       return next(err);
