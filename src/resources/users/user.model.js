@@ -1,7 +1,6 @@
 const uuid = require('uuid');
 
 class User {
-  // TODO: return to object
   constructor({
     id = uuid(),
     name = 'USER',
