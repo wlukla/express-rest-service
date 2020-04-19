@@ -1,5 +1,4 @@
 const router = require('express').Router();
-const User = require('./user.model');
 const usersService = require('./user.service');
 const ErrorHandler = require('../../common/ErrorHandler');
 
@@ -10,7 +9,7 @@ router
       const users = await usersService.getAll();
 
       res.status(200);
-      res.json(users.map(User.toResponse));
+      res.json(users);
     } catch (err) {
       return next(err);
     }
@@ -20,6 +19,7 @@ router
       const { name, login, password } = req.body;
       if (name && login && password) {
         const user = await usersService.addUser({ name, login, password });
+
         res.status(200);
         res.json(user);
       } else {
@@ -31,10 +31,10 @@ router
   });
 
 router
-  .route('/:userId')
+  .route('/:userID')
   .get(async (req, res, next) => {
     try {
-      const user = await usersService.getById(req.params.userId);
+      const user = await usersService.getById(req.params.userID);
       if (user) {
         res.status(200);
         res.json(user);
@@ -47,14 +47,10 @@ router
   })
   .put(async (req, res, next) => {
     try {
-      const { userId } = req.params;
-      const user = req.body;
+      await usersService.updateUser(req.params.userID, req.body);
 
-      const result = await usersService.updateUser(userId, user);
-      if (!result) {
-        throw new ErrorHandler(404, 'User not found.');
-      }
-      res.json(result);
+      res.status(200);
+      res.send({ message: 'The user has been updated.' });
     } catch (err) {
       return next(err);
     }
