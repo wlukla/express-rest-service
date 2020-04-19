@@ -1,36 +1,41 @@
-const usersRepo = require('./user.memory.repository');
+const usersRepo = require('./user.db.repository');
 const taskRepo = require('../tasks/task.memory.repository');
 const taskService = require('../tasks/task.service');
+const User = require('./user.model');
 
-const getAll = () => usersRepo.getAll();
+const getAll = async () => await usersRepo.getAll();
 
-const getByID = id => {
-  const users = getAll();
-  const res = users.find(user => user.id === id);
-  return res;
+const getById = async id => {
+  const user = await usersRepo.getById(id);
+  return User.toResponse(user);
 };
 
-const addUser = user => {
-  usersRepo.addUser(user);
+const addUser = async user => {
+  const newUser = await usersRepo.addUser(user);
+  return User.toResponse(newUser);
 };
 
-const updateUser = (id, data) => {
-  usersRepo.updateUser(id, data);
+const updateUser = async (id, data) => {
+  const result = await usersRepo.updateUser(id, data);
+  if (result) {
+    return User.toResponse(result);
+  }
 };
 
-const deleteUser = id => {
-  usersRepo.deleteUser(id);
+const deleteUser = async id => {
+  const isDeleted = await usersRepo.deleteUser(id);
   const tasks = taskRepo.getAll().filter(task => task.userId === id);
 
-  for (let i = 0; i < tasks.length; i += 1) {
-    const { id: taskId, boardId } = tasks[i];
-    taskService.updateTask(taskId, boardId, { ...tasks[i], userId: null });
-  }
+  tasks.forEach(task => {
+    const { id: taskId, boardId } = task;
+    taskService.updateTask(taskId, boardId, { ...tasks, userId: null });
+  });
+  return isDeleted;
 };
 
 module.exports = {
   getAll,
-  getByID,
+  getById,
   addUser,
   updateUser,
   deleteUser

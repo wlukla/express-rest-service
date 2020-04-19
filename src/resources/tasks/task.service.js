@@ -1,5 +1,5 @@
 const taskRepo = require('./task.memory.repository');
-const boardService = require('../boards/board.service');
+const boardRepo = require('../boards/board.memory.repository');
 const Task = require('./task.model');
 
 const getAll = boardId => {
@@ -9,14 +9,11 @@ const getAll = boardId => {
 
 const getByID = (boardId, taskId) => {
   const tasks = taskRepo.getAll();
-  const task = tasks.find(
-    item => item.boardId === boardId && item.id === taskId
-  );
-  return task;
+  return tasks.find(item => item.boardId === boardId && item.id === taskId);
 };
 
 const addTask = (boardId, data) => {
-  const board = boardService.getByID(boardId);
+  const board = boardRepo.getByID(boardId);
   if (board) {
     const task = new Task({ ...data, boardId });
     taskRepo.addTask(task);

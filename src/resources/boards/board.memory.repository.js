@@ -4,6 +4,10 @@ const getAll = () => {
   return boards;
 };
 
+const getByID = id => {
+  return boards.find(board => board.id === id);
+};
+
 const addBoard = board => {
   boards.push(board);
 };
@@ -22,4 +26,4 @@ const deleteBoard = id => {
   }
 };
 
-module.exports = { getAll, addBoard, updateBoard, deleteBoard };
+module.exports = { getAll, getByID, addBoard, updateBoard, deleteBoard };
