@@ -1,25 +1,19 @@
 const Task = require('./task.model');
 
 const getAll = async () => {
-  const tasks = await Task.find({}).exec();
-  return tasks.map(Task.toResponse);
+  return await Task.find({});
 };
 
-const getOneById = async id => {
-  const task = await Task.findById(id);
-  return task !== null ? task : undefined;
+const addTask = async task => {
+  await Task.create(task);
 };
 
-const postOne = async data => await Task.create(data);
-
-const putOneById = async (id, data) => {
-  const isUpdate = (await Task.updateOne({ _id: id }, data)).ok;
-  return isUpdate === 1 ? data : undefined;
+const updateTask = async (taskId, boardId, data) => {
+  await Task.updateOne({ id: taskId, boardId }, data);
 };
 
-const deleteOneById = async id => {
-  const isDeleted = (await Task.deleteOne({ _id: id })).ok;
-  return isDeleted;
+const deleteTask = async (taskId, boardId) => {
+  await Task.deleteOne({ id: taskId, boardId });
 };
 
-module.exports = { getAll, getOneById, postOne, putOneById, deleteOneById };
+module.exports = { getAll, addTask, updateTask, deleteTask };

@@ -1,5 +1,4 @@
 const router = require('express').Router();
-const Task = require('./task.model');
 const taskService = require('./task.service');
 const ErrorHandler = require('../../common/ErrorHandler');
 
@@ -7,20 +6,20 @@ router
   .route('/boards/:boardID/tasks')
   .get(async (req, res, next) => {
     try {
-      const tasks = taskService.getAll(req.params.boardID);
+      const tasks = await taskService.getAll(req.params.boardID);
 
       res.status(200);
-      res.json(tasks.map(Task.toResponse));
+      res.json(tasks);
     } catch (err) {
       return next(err);
     }
   })
-  .post((req, res, next) => {
+  .post(async (req, res, next) => {
     try {
-      const task = taskService.addTask(req.params.boardID, req.body);
+      const task = await taskService.addTask(req.params.boardID, req.body);
 
       res.status(200);
-      res.json(Task.toResponse(task));
+      res.json(task);
     } catch (err) {
       return next(err);
     }
@@ -28,9 +27,12 @@ router
 
 router
   .route('/boards/:boardID/tasks/:taskID')
-  .get((req, res, next) => {
+  .get(async (req, res, next) => {
     try {
-      const task = taskService.getByID(req.params.boardID, req.params.taskID);
+      const task = await taskService.getByID(
+        req.params.boardID,
+        req.params.taskID
+      );
       if (task) {
         res.status(200);
         res.json(task);
@@ -41,11 +43,18 @@ router
       return next(err);
     }
   })
-  .put((req, res, next) => {
+  .put(async (req, res, next) => {
     try {
-      const task = taskService.getByID(req.params.boardID, req.params.taskID);
+      const task = await taskService.getByID(
+        req.params.boardID,
+        req.params.taskID
+      );
       if (task) {
-        taskService.updateTask(req.params.taskID, req.params.boardID, req.body);
+        await taskService.updateTask(
+          req.params.taskID,
+          req.params.boardID,
+          req.body
+        );
 
         res.status(200);
         res.send({ message: 'The task has been updated.' });
@@ -56,11 +65,14 @@ router
       return next(err);
     }
   })
-  .delete((req, res, next) => {
+  .delete(async (req, res, next) => {
     try {
-      const task = taskService.getByID(req.params.boardID, req.params.taskID);
+      const task = await taskService.getByID(
+        req.params.boardID,
+        req.params.taskID
+      );
       if (task) {
-        taskService.deleteTask(req.params.taskID, req.params.boardID);
+        await taskService.deleteTask(req.params.taskID, req.params.boardID);
 
         res.status(200);
         res.send({ message: 'The Task has been deleted' });

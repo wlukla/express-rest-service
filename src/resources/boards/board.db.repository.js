@@ -1,20 +1,23 @@
 const Board = require('./board.model');
 
 const getAll = async () => {
-  const boards = await Board.find({}).exec();
-  return boards;
+  return await Board.find({});
 };
 
-const getById = async id => await Board.find({ id });
-
-const addBoard = async data => {
-  const board = await Board.create(data);
-  return board;
+const getByID = async id => {
+  return await Board.findOne({ id });
 };
 
-const updateBoard = async (id, data) =>
-  (await Board.updateOne({ _id: id }, data)).ok;
+const addBoard = async board => {
+  await Board.create(board);
+};
 
-const deleteBoard = async id => (await Board.deleteOne({ _id: id })).ok;
+const updateBoard = async (id, data) => {
+  return (await Board.updateOne({ id }, data))[0];
+};
 
-module.exports = { getAll, getById, addBoard, updateBoard, deleteBoard };
+const deleteBoard = async id => {
+  await Board.deleteOne({ id });
+};
+
+module.exports = { getAll, getByID, addBoard, updateBoard, deleteBoard };

@@ -5,9 +5,9 @@ const ErrorHandler = require('../../common/ErrorHandler');
 
 router
   .route('/')
-  .get((req, res, next) => {
+  .get(async (req, res, next) => {
     try {
-      const boards = boardService.getAll();
+      const boards = await boardService.getAll();
 
       res.status(200);
       res.json(boards);
@@ -15,12 +15,12 @@ router
       return next(err);
     }
   })
-  .post((req, res, next) => {
+  .post(async (req, res, next) => {
     try {
       const { title, columns } = req.body;
       if (title && columns) {
         const newBoard = new Board({ title, columns });
-        boardService.addBoard(newBoard);
+        await boardService.addBoard(newBoard);
 
         res.status(200);
         res.json(newBoard);
@@ -34,9 +34,9 @@ router
 
 router
   .route('/:boardID')
-  .get((req, res, next) => {
+  .get(async (req, res, next) => {
     try {
-      const board = boardService.getByID(req.params.boardID);
+      const board = await boardService.getByID(req.params.boardID);
       if (board) {
         res.status(200);
         res.json(board);
@@ -47,9 +47,9 @@ router
       return next(err);
     }
   })
-  .put((req, res, next) => {
+  .put(async (req, res, next) => {
     try {
-      boardService.updateBoard(req.params.boardID, req.body);
+      await boardService.updateBoard(req.params.boardID, req.body);
 
       res.status(200);
       res.send({ message: 'The board has been updated.' });
@@ -57,11 +57,11 @@ router
       return next(err);
     }
   })
-  .delete((req, res, next) => {
+  .delete(async (req, res, next) => {
     try {
-      const board = boardService.getByID(req.params.boardID);
+      const board = await boardService.getByID(req.params.boardID);
       if (board) {
-        boardService.deleteBoard(req.params.boardID);
+        await boardService.deleteBoard(req.params.boardID);
 
         res.status(200);
         res.send({ message: 'The board has been deleted' });
