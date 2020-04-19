@@ -5,9 +5,9 @@ const ErrorHandler = require('../../common/ErrorHandler');
 
 router
   .route('/')
-  .get((req, res, next) => {
+  .get(async (req, res, next) => {
     try {
-      const users = usersService.getAll();
+      const users = await usersService.getAll();
 
       res.status(200);
       res.json(users.map(User.toResponse));
@@ -15,15 +15,13 @@ router
       return next(err);
     }
   })
-  .post((req, res, next) => {
+  .post(async (req, res, next) => {
     try {
       const { name, login, password } = req.body;
       if (name && login && password) {
-        const user = new User({ name, login, password });
-        usersService.addUser(user);
-
+        const user = await usersService.addUser({ name, login, password });
         res.status(200);
-        res.json(User.toResponse(user));
+        res.json(user);
       } else {
         throw new ErrorHandler(400, 'Bad request');
       }
@@ -33,10 +31,10 @@ router
   });
 
 router
-  .route('/:userID')
-  .get((req, res, next) => {
+  .route('/:userId')
+  .get(async (req, res, next) => {
     try {
-      const user = usersService.getByID(req.params.userID);
+      const user = await usersService.getById(req.params.userId);
       if (user) {
         res.status(200);
         res.json(user);
@@ -47,24 +45,23 @@ router
       return next(err);
     }
   })
-  .put((req, res, next) => {
+  .put(async (req, res, next) => {
     try {
-      const user = usersService.getByID(req.params.userID);
-      if (user) {
-        usersService.updateUser(req.params.userID, req.body);
+      const { userId } = req.params;
+      const user = req.body;
 
-        res.status(200);
-        res.send({ message: 'The user has been updated.' });
-      } else {
-        throw new ErrorHandler(404, 'User not found');
+      const result = await usersService.updateUser(userId, user);
+      if (!result) {
+        throw new ErrorHandler(404, 'User not found.');
       }
+      res.json(result);
     } catch (err) {
       return next(err);
     }
   })
-  .delete((req, res, next) => {
+  .delete(async (req, res, next) => {
     try {
-      usersService.deleteUser(req.params.userID);
+      await usersService.deleteUser(req.params.userID);
 
       res.status(204);
       res.send({ message: 'The user has been deleted' });
