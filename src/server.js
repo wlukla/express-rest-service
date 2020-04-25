@@ -2,7 +2,7 @@
 require('dotenv').config();
 const { PORT } = require('./common/config');
 const app = require('./app');
-const { processLogger } = require('./logger/index');
+const { processLogger } = require('./middlewares/loggers');
 const connectToDB = require('./db/db.client');
 
 process.on('unhandledRejection', err => {
